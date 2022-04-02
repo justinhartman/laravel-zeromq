@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Denpa\ZeroMQ;
 
 use InvalidArgumentException;
-use React\EventLoop\Factory as EventLoop;
+use React\EventLoop\Loop as EventLoop;
 use React\EventLoop\LoopInterface;
 use React\ZMQ\Context;
 
@@ -49,7 +49,7 @@ class Manager
     public function __construct(array $config)
     {
         $this->config = $config;
-        $this->loop = EventLoop::create();
+        $this->loop = EventLoop::get();
     }
 
     /**
@@ -89,7 +89,7 @@ class Manager
     {
         $name = $name ?: 'default';
 
-        if (! array_key_exists($name, $this->connections)) {
+        if (! \array_key_exists($name, $this->connections)) {
             $this->connections[$name] = $this->resolve($name);
         }
 
@@ -107,7 +107,7 @@ class Manager
     {
         $name = $name ?: 'default';
 
-        if (! array_key_exists($name, $this->config)) {
+        if (! \array_key_exists($name, $this->config)) {
             throw new InvalidArgumentException(
                 "Could not find connection configuration [$name]"
             );
