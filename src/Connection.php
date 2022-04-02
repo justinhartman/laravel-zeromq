@@ -88,6 +88,7 @@ class Connection
      * @param  mixed  $message
      *
      * @return \React\EventLoop\LoopInterface
+     * @throws \ZMQSocketException
      */
     public function publish(array $channels, $message): LoopInterface
     {
@@ -110,6 +111,7 @@ class Connection
      * @param  callable  $callback
      *
      * @return \React\EventLoop\LoopInterface
+     * @throws \ZMQSocketException
      */
     public function pull(callable $callback): LoopInterface
     {
@@ -132,6 +134,7 @@ class Connection
      * @param  mixed  $message
      *
      * @return \React\EventLoop\LoopInterface
+     * @throws \ZMQSocketException
      */
     public function push($message): LoopInterface
     {
@@ -146,12 +149,13 @@ class Connection
     }
 
     /**
-     * Subscribes to channels.
+     * Subscribe to channels.
      *
      * @param  array     $channels
      * @param  callable  $callback
      *
      * @return \React\EventLoop\LoopInterface
+     * @throws \ZMQSocketException
      */
     public function subscribe(array $channels, callable $callback): LoopInterface
     {
@@ -176,13 +180,13 @@ class Connection
     /**
      * Success callback.
      *
-     * @param  string    $message
+     * @param  string|array    $message
      * @param  callable  $callback
      * @param  \React\ZMQ\SocketWrapper|null $socket
      *
      * @return void
      */
-    protected function onSuccess(string $message, callable $callback, ?Socket $socket): void
+    protected function onSuccess(array|string $message, callable $callback, ?Socket $socket): void
     {
         if ($callback($message) === false) {
             if (! $socket->closed) {
